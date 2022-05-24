@@ -41,25 +41,25 @@ fastify.get("/*", async (req, reply) => {
 
   const folderName = decodeURI(req.url)
 
-  const directories = getDirectories('./data/')
+  const directories = getDirectories(getDataPath());
   directories.unshift('Dossier Principal')
 
-  const files = await getFiles(`./data/${folderName}`)
+  const files = await getFiles(path.join(getDataPath(), folderName))
 
   reply.view("/views/index.ejs", { directories, files, active: folderName.substring(1) });
 });
 
 fastify.get('/video', async (req, reply) => {
   if(req.session.auth == null)
-    return reply.redirect('/login')
+    return reply.redirect('/login');
 
   if(req.query.path == null)
-    return reply.redirect('/')
+    return reply.redirect('/');
 
-  const directories = getDirectories('./data/')
-  directories.unshift('Dossier Principal')
+  const directories = getDirectories(getDataPath());
+  directories.unshift('Dossier Principal');
 
-  reply.view('/views/video.ejs', { directories, video: req.query.path })
+  reply.view('/views/video.ejs', { directories, video: req.query.path });
 })
 
 fastify.listen(80, '0.0.0.0', (err) => {
@@ -77,20 +77,20 @@ async function getFiles(path) {
 
   const files = [];
   for(const file of fs.readdirSync(path)) {
-    const stats = fs.statSync(`${path}/${file}`)
+    const stats = fs.statSync(`${path}/${file}`);
     if(!stats.isFile() && !file.endsWith('.mp4'))
       continue;
     
     let seconds;
     try {
-      const info = await ffprobe(path + '/' + file, { path: ffprobeStatic.path })
+      const info = await ffprobe(path + '/' + file, { path: ffprobeStatic.path });
       seconds = info.streams.filter((e) => e.duration_ts > 0)[0].duration;
     } catch(e) {
       if(e)
         continue;
     }
 
-    files.push({name: file, duration: new Date(seconds * 1000).toISOString().substring(11, 16), size: formatBytes(stats.size), created: stats.ctime, path: encodeURI(`${path.replace('./data//', '')}/${file}`)})
+    files.push({name: file, duration: new Date(seconds * 1000).toISOString().substring(11, 16), size: formatBytes(stats.size), created: stats.ctime, path: encodeURI(`${path.replace(getDataPath(), '')}/${file}`)})
   }
 
   return files;
@@ -108,4 +108,8 @@ function formatBytes(bytes, decimals = 2) {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+function getDataPath() {
+  return path.join(__dirname, 'data');
 }
