@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://vjs.zencdn.net/7.19.2/video-js.css" rel="stylesheet" />
+<title>Vidéo à la demande</title>
+</head>
+
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+   <div class="flex md:flex-row-reverse flex-wrap">
+
+      <div class="w-full md:w-4/5 bg-gray-100">
+         <video id="my-video" class="video-js" controls preload="auto" data-setup='{"fluid": true}'>
+            <source src="/data<%= video %>" type="video/mp4">
+         </video>
+      </div>
+
+      <!--Sidebar-->
+      <div
+         class="w-full md:w-1/6 bg-gray-900 md:bg-gray-900 px-2 text-center fixed bottom-0 md:pt-8 md:top-0 md:left-0 h-16 md:h-screen md:border-r-4 md:border-gray-600">
+         <div class="md:relative mx-auto lg:float-right lg:px-6">
+            <ul class="list-reset flex flex-row md:flex-col text-center md:text-left">
+               <% for(let i=0; i < directories.length; i++) {%>
+                  <li class="mr-3 flex-1">
+                     <a href="<%= encodeURI(i === 0 ? '/' : '/' + directories[i]) %>"
+                        class="block py-1 md:py-3 pl-1 align-middle text-gray-800 no-underline hover:text-pink-500 border-b-2 border-gray-800 md:border-gray-900 hover:border-pink-500">
+                        <span class="pb-1 md:pb-0 text-xs md:text-base text-white md:font-bold block md:inline-block">
+                           <%= directories[i] %>
+                        </span>
+                     </a>
+                  </li>
+                  <% } %>
+            </ul>
+         </div>
+      </div>
+   </div>
+
+   <script src="https://vjs.zencdn.net/7.19.2/video.min.js"></script>
+</body>
+
+</html>
