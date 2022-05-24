@@ -18,7 +18,7 @@ npm -v
 git clone git@github.com/KiwiTerra/docker-sae203.git -b videoplayer
 ```
 
-- Renommer le fichier d'environnement `.env.example` -> `.env` **et** changez les lignes **2** et **3**.
+- Renommer le fichier d'environnement `.env.example` -> `.env` **et** changez les valeurs des lignes **1** et **2**.
 
 - Lancez le serveur web :
 ```shell
@@ -26,4 +26,4 @@ npm start
 ```
 
 ## Lancement dans votre navigateur
--> Ouvrez un navigateur et tapez comme URL:  ```localhost:[Port]```
+-> Ouvrez un navigateur et tapez comme URL:  ```http://localhost/```
